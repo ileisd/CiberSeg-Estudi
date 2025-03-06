@@ -34,13 +34,12 @@ L'enumeració d'aquest servei es basa en:
 - Descarregar tots els arxius trobats
 - Revisar la informació i les metadades de cada arxiu
 ```bash
-smbclient -L [ip] # NULL Session attack
+smbclient -N -L \\\\[host]\\ # NULL Session
+smbclient -L \\\\[host]\\ -U [user] # Llistar shares per l'usuari (demana contrasenya)
+smbclient \\\\[host]\\[share] -U [user] # Connectar-se al share del servidor SMB (demana contrasenya)
 
-smbmap -p [pass] -u [user] -H [host] # Llistar shares
-
-smbclient \\\\[ip]\\share # Connectar-se a SMB
-
-rpcclient -U [DOMINI/USER%PASS] [HOST] # Connectar-se a RPCclient
+impacket-lookupsid [user]@[host] # RID Cycling
+impacket-lookupsid guest@[host] --no-pass # NULL Session RID Cycling
 
 enum4linux -a [host] # Automatitza l'enumeració a través de rpcclient
 
