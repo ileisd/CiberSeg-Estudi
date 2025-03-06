@@ -1,4 +1,4 @@
-!/usr/bin/bash
+#!/usr/bin/bash
 
 #                                                      #
 # Fet per ileisd com a preparació de la prova del eJPT #
