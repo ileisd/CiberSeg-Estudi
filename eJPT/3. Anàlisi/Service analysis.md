@@ -68,6 +68,7 @@ arpspoof -i [iface] [victima_ip] [gateway_ip] # Entre víctima i gateway
 # Captura el tràfic SMB (NTLM Hash)
 responder -I [iface] -v
 ```
+> Samba utilitza el servei RPC per temes de debug i configuració. ÉS una eina super potent que permet enumerar gran quantitat de coses amb credencials o NULL Session. Tota la info a [RPC Enum](https://www.hackingarticles.in/active-directory-enumeration-rpcclient/).
 ## MySQL
 Sistema de gestió de bases de dades relacional. Tot i que no és l'únic i és possible trobar-ne d'altres i d'altres tipus, MySQL és el més comú, ja que és de codi obert. Normalment està configurat per operar en el port 3306 del localhost, pel que no es pot accedir des d'un host extern i la seva enumeració correspon més a la part de post-explotació, tot i que és possible que s'hi pugui accedir remotament en certs casos, per necessitat del propi sistema.
 L'enumeració consisteix en:
