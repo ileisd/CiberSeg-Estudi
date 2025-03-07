@@ -17,7 +17,7 @@ route
 socks_proxy
 
 # bash
-echo "socks5 [ip_intermediaria] [port]" > /etc/proxychains4.conf # socks proxy
+echo "socks5 [ip_intermediaria] [port]" >> /etc/proxychains4.conf # socks proxy
 proxychains4 [command]
 ```
 
