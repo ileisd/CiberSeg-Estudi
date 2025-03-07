@@ -15,7 +15,7 @@ while getopts "u:w:f" flag; do
 done
 
 tput civis
-touch test.txt
+echo "I have been uploaded!" > test.txt
 
 while read -r dir; do
   put=$(curl -L -s -o /dev/null -w "%{http_code}" "$url/$dir" --upload-file test.txt 2>&1)
