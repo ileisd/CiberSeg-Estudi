@@ -35,3 +35,69 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 9.88 seconds
 ````
 Buscant la versió de SSH al launchpad d'Ubuntu ja es pot extreure que, segurament, el host té un Ubuntu Jammy. D'altra banda, sabem que s'està aplicant _Virtual Hosting_ i, per tant, s'ha d'afegir el domini 2million.htb a l'arxiu /etc/hosts per a que resolgui a la IP que pertoca.
+
+## Web enumeration
+
+````bash
+> wfuzz -c -t 20 --hc=401,301 -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt http://2million.htb/FUZZ
+
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://2million.htb/FUZZ
+Total requests: 220545
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload                                                                                                                                          
+=====================================================================
+
+000000039:   200        80 L     232 W      3704 Ch     "login"                                                                                                                                          
+000000024:   302        0 L      0 W        0 Ch        "home"                                                                                                                                           
+000000051:   200        94 L     293 W      4527 Ch     "register"                                                                                                                                       
+000001012:   401        0 L      0 W        0 Ch        "api"                                                                                                                                            
+000001211:   302        0 L      0 W        0 Ch        "logout"                                                                                                                                         
+000001545:   200        45 L     152 W      1674 Ch     "404"                                                                                                                                            
+000007259:   200        45 L     152 W      1674 Ch     "0404"                                                                                                                                           
+000007922:   200        96 L     285 W      3859 Ch     "invite" 
+````
+Els directoris que ens interessen són: _login_, _register_, _invite_ i _api_. De moment, no es pot fer res a cap d'aquests, ja que no disposem de credencials vàlides ni de codi d'invitació. Tanmateix, mirant el codi de la pàgina _/invite_ es veu un script de verificació del codi introduït que crida a l'endpoint de l'API _/api/v1/invite/verify_.
+````javascript
+        $(document).ready(function() {
+            $('#verifyForm').submit(function(e) {
+                e.preventDefault();
+
+                var code = $('#code').val();
+                var formData = { "code": code };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    data: formData,
+                    url: '/api/v1/invite/verify',
+                    success: function(response) {
+                        if (response[0] === 200 && response.success === 1 && response.data.message === "Invite code is valid!") {
+                            // Store the invite code in localStorage
+                            localStorage.setItem('inviteCode', code);
+
+                            window.location.href = '/register';
+                        } else {
+                            alert("Invalid invite code. Please try again.");
+                        }
+                    },
+                    error: function(response) {
+                        alert("An error occurred. Please try again.");
+                    }
+                });
+            });
+        });
+````
+També es veu que executa un fitxer de JavaScript a la ruta _/js/inviteapi.min.js_, en el qual, a banda de l'endpoint _verify_, trobem un altre per generar un codi: _generate_. Per tant, es dedueix que per generar un codi hem de fer una petició a l'endpoint _/api/v1/invite/generate_. Tanmateix, una petició per GET retorna un codi d'error 405 dient que el mètode no està permès però provant la mateixa petició amb el mètode POST retorna un codi d'invitació en format base64.
+![image](https://github.com/user-attachments/assets/66679475-d9e7-4814-bb84-b55a26a5eb52)
+````bash
+> echo "VVpXQ0ctWlBGVjQtTTI5Q1YtWUVRRjQ=" | base64 -d
+UZWCG-ZPFV4-M29CV-YEQF4
+````
+I ja ens podem registrar :)
+
+## Foothold
