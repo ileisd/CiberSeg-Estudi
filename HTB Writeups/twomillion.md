@@ -141,7 +141,7 @@ Hem aconseguit una reverse shell com l'usuari _www-data_.
 
 ## User
 
-Només hi ha 3 usuaris al host: _root_, _www-data_ i _admin_. Per aconseguir la flag d'usuari, hem de poder convertir-nos en l'usuari admin.
+Només hi ha 3 usuaris que poguem accedir al host: _root_, _www-data_ i _admin_. Per aconseguir la flag d'usuari, hem de poder convertir-nos en l'usuari admin.
 ````bash
 > cat /etc/passwd | grep 'sh$'
 
