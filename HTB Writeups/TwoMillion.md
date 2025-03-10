@@ -8,8 +8,6 @@ Escaneig a través d'enviament de paquets TCP SYN a tots els ports del host per 
 ````bash
 > nmap -p- --open -sS -v -n --min-rate=5000 -Pn -n 10.10.11.221
 
-Host is up (0.072s latency).
-Not shown: 65533 closed tcp ports (reset)
 PORT   STATE SERVICE
 22/tcp open  ssh
 80/tcp open  http
