@@ -165,3 +165,31 @@ I podem veure que sí que n'hi ha hagut.
 
 
 ## Privilege escalation
+
+En la imatge anterior, es veu que la capçalera diu "You have mail". Per tant, mirem el directori de correu de l'usuari _admin_ per comprovar quin correu ha rebut.
+````bash
+> cat /var/mail/admin
+
+From: ch4p <ch4p@2million.htb>
+To: admin <admin@2million.htb>
+Cc: g0blin <g0blin@2million.htb>
+Subject: Urgent: Patch System OS
+Date: Tue, 1 June 2023 10:45:22 -0700
+Message-ID: <9876543210@2million.htb>
+X-Mailer: ThunderMail Pro 5.2
+
+Hey admin,
+
+I'm know you're working as fast as you can to do the DB migration. While we're partially down, can you also upgrade the OS on our web host? There have been a few serious Linux kernel CVEs already this year. That one in OverlayFS / FUSE looks nasty. We can't get popped by that.
+
+HTB Godfather
+````
+La vulnerabilitat a la que es refereix és la CVE-2023-0386, un error del kernel de Linux que permet la execució d'un arxiu amb els bits SUID amb privilegis elevats a través de la còpia d'un arxiu no privilegiat a l'Overlay File System. Amb l'exploit del repositori [CVE-2023-0386](https://github.com/puckiestyle/CVE-2023-0386) podem explotar la vulnerabilitat seguint les seves pròpies instruccions. Un cop compilat, obrim dos terminals sota l'usuari _admin_ i executem:
+
+**- Terminal 1:** ./fuse ./ovlcap/lower ./gc
+
+**- Terminal 2:** ./exp
+
+![image](https://github.com/user-attachments/assets/7ee110f0-2d27-408c-a7d3-976ea2d6673e)
+
+I acabariem la màquina tenint privilegis de root sobre el sistema.
