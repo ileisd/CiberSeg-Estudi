@@ -2,6 +2,8 @@
   <img src="https://github.com/user-attachments/assets/9d0f2f9d-818d-42ae-9dd0-02cf12aeeba0" alt="cap-htb-header" width="700" height="500">
 </p>
 
+---
+
 ## NMAP scanning
 Escaneig a través d'enviament de paquets TCP SYN a tots els ports del host per detectar quins estan oberts.
 ````bash
