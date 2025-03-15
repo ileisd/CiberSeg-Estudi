@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/49f49f6b-b80d-405d-968c-4c5f4f8704ac" alt="cap-htb-header" width="700" height="500">
+  <img src="https://github.com/user-attachments/assets/49f49f6b-b80d-405d-968c-4c5f4f8704ac" alt="unrested-htb-header" width="50%" height="50%">
 </p>
 
 ---
