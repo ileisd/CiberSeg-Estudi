@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/bb633264-4148-4237-9b21-f4a37268670a" alt="twomillion-htb-header" width="700" height="500">
+  <img src="https://github.com/user-attachments/assets/bb633264-4148-4237-9b21-f4a37268670a" alt="instant-htb-header" width="50%" height="50%">
 </p>
 
 ---
