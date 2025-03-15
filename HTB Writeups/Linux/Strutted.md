@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/4bfec8c2-a672-4525-9acc-e837fa0246d9" alt="strutter-htb-header" width="700" height="500">
+  <img src="https://github.com/user-attachments/assets/4bfec8c2-a672-4525-9acc-e837fa0246d9" alt="strutted-htb-header" width="50%" height="50%">
 </p>
 
 ---
