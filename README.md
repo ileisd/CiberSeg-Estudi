@@ -3,8 +3,8 @@
 | Certificació    | Data |
 | -------- | ------- |
 | eJPTv2  | ✅ |
-| ICCA | juny 2025 |
-| eCPPTv3 | novembre 2025 |
+| ICCA | abril 2025 |
+| eCPPTv3 | setembre 2025 |
 | OSCP | març 2026 |
 
 # Màquines
